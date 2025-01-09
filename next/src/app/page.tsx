@@ -1,12 +1,14 @@
-import Header from "@/app/Header";
 
-
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="text-2xl">
-      Hello world
-      <Header/>
-    </div>
+    <main>
+      
+    </main>
   );
 }
