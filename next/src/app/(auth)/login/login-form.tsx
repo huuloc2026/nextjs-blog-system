@@ -4,7 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import Link from "next/link"; // Import Link component from Next.js
+
 import {
   Form,
   FormControl,
@@ -15,74 +16,70 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import envConfig from "@/app/config/config";
+import { useToast } from "@/hooks/use-toast";
+import { useAppContext } from "@/app/AppProvider";
 
-// Define form schema with Zod
 const formSchema = z.object({
   email: z.string().min(2).max(50).email({ message: "Invalid email address" }),
-  name: z
-    .string()
-    .min(2, { message: "Username must be at least 2 characters" }),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters" })
     .max(50),
-  phone: z
-    .string()
-    .min(10, { message: "Phone number must be at least 10 characters" })
-    .optional(),
-  dateOfBirth: z
-    .string()
-    .refine((val) => !val || !isNaN(Date.parse(val)), {
-      message: "Invalid date format",
-    })
-    .optional(),
-  address: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function RegisterForm() {
-   const { toast } = useToast();
+export function LoginForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      name: "",
-      password: "",
-      dateOfBirth: "", 
+      email: "kigagybo@mailinator.com",
+      password: "kigagybo@mailinator.com",
     },
   });
 
+  const { toast } = useToast();
+  const {setSessionToken} = useAppContext()
+
   // Handle form submission
   async function onSubmit(values: FormValues) {
+    const apiUrl = envConfig?.NEXT_PUBLIC_API_ENDPOINT;
     try {
-      const apiUrl = envConfig?.NEXT_PUBLIC_API_ENDPOINT;
-      const response = await fetch(` ${apiUrl}/auth/register`, {
+      if (!apiUrl) {
+        throw new Error("API URL is not defined");
+      }
+
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
+        },                                
         body: JSON.stringify(values),
-      });
+      }); 
 
-      const jsonResponse = await response.json();
+      const result = await response.json();
+      console.log(result.data.accessToken);
+      setSessionToken(result.data.accessToken);
       if (!response.ok) {
-        console.error("API Error:", jsonResponse);
-        throw new Error(jsonResponse.message || "Failed to register");
+        throw new Error(result.message || "Login failed");
       }
       toast({
         variant: "default",
-        title: "Successfully!!!",
-        description: jsonResponse.message ? jsonResponse.message : "Successfully to register",
+        title: "Success!",
+        description: result.message,
       });
-      console.log("Registration successful:", jsonResponse);
-    } catch (error:any) {
+      // Handle success (e.g., redirect or store token) 
+      const resultFromNext = await fetch("/api", {
+        method: "POST",
+        body: JSON.stringify(result), 
+      });
+
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: error.message ? error.message : "Failed to register",
+        description: error.message,
       });
-      console.log(error);
     }
   }
 
@@ -108,20 +105,6 @@ export function RegisterForm() {
 
         <FormField
           control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>User Name (*)</FormLabel>
-              <FormControl>
-                <Input placeholder="username" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem>
@@ -134,23 +117,17 @@ export function RegisterForm() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="dateOfBirth"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date of Birth</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <Button type="submit" className="w-full">
           Submit
         </Button>
+
+        {/* "Don't have an account?" link */}
+        <div className="text-center mt-4">
+          <span>Don't have an account?</span>{" "}
+          <Link href="/register" className="hover:underline">
+            <Button variant={"ghost"}>Register here</Button>
+          </Link>
+        </div>
       </form>
     </Form>
   );

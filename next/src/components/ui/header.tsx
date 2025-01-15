@@ -1,21 +1,32 @@
-import { ModeToggle } from '@/components/ui/mode-toggle'
-import Link from 'next/link'
-import React from 'react'
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import Link from "next/link";
+import React from "react";
 
 const Header = () => {
   return (
-    <header className="text-xl">
-      <ul>
-        <li>
-          <ModeToggle/>
-          <Link href={'/login'}>Login</Link>
-        </li>
-         <li>
-          <Link href={'/register'}>Register</Link>
-        </li>
-      </ul>
-    </header>
-  )
-}
+    <header className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-md">
+      {/* Left-side Mode Toggle */}
+      <div className="flex items-center space-x-4">
+        <ModeToggle />
+      </div>
 
-export default Header
+      {/* Navigation links */}
+      <nav className="space-x-6">
+        <Link
+          href="/login"
+          className="text-lg font-medium hover:text-blue-400 transition-colors"
+        >
+          Login
+        </Link>
+        <Link
+          href="/register"
+          className="text-lg font-medium hover:text-blue-400 transition-colors"
+        >
+          Register
+        </Link>
+      </nav>
+    </header>
+  );
+};
+
+export default Header;
