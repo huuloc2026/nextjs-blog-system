@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import envConfig from "@/app/config/config";
 import { useToast } from "@/hooks/use-toast";
 import { useAppContext } from "@/app/AppProvider";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().min(2).max(50).email({ message: "Invalid email address" }),
@@ -40,6 +41,7 @@ export function LoginForm() {
 
   const { toast } = useToast();
   const {setSessionToken} = useAppContext()
+    const router = useRouter();
 
   // Handle form submission
   async function onSubmit(values: FormValues) {
@@ -58,7 +60,7 @@ export function LoginForm() {
       }); 
 
       const result = await response.json();
-      console.log(result.data.accessToken);
+      console.log(result);
       setSessionToken(result.data.accessToken);
       if (!response.ok) {
         throw new Error(result.message || "Login failed");
@@ -68,11 +70,18 @@ export function LoginForm() {
         title: "Success!",
         description: result.message,
       });
+      router.push("/me");
+      router.refresh();
+
       // Handle success (e.g., redirect or store token) 
-      const resultFromNext = await fetch("/api", {
+      const resultFromNextServer = await fetch("/api", {
         method: "POST",
-        body: JSON.stringify(result), 
+        body: JSON.stringify(result),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+      console.log(">>>>resultFromNextServer", resultFromNextServer);
 
     } catch (error: any) {
       toast({

@@ -1,11 +1,12 @@
 "use client";
+
 import { useAppContext } from "@/app/AppProvider";
 import envConfig from "@/app/config/config";
-import { cookies } from "next/headers";
 import React, { useEffect } from "react";
 const HelloProfile = () => {
   const apiUrl = envConfig?.NEXT_PUBLIC_API_ENDPOINT;
   const { sessionToken } = useAppContext();
+
   useEffect(() => {
     const fetchRequest = async () => {
       const result = await fetch(`${apiUrl}/user/getAllUsers`, {
@@ -15,11 +16,22 @@ const HelloProfile = () => {
         },
       });
       const res = await result.json();
-      console.log(res);
+
     };
     fetchRequest();
-  }, [sessionToken]);
-  return <div>HelloProfile</div>;
+  }, []);
+  return <div> 
+    {/* <div>
+        {res.data.map((item: any) => {
+          return (
+            <ul className="justify-center flex p-6">
+              <li key={item.id}>Hello {item.email}</li>
+            </ul>
+          );
+        })}
+      </div> */}
+      <h1>Hello World</h1>
+      </div>;
 };
 
 export default HelloProfile;

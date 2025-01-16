@@ -10,6 +10,7 @@ export const useAppContext = () => {
   if (!context) {
     throw new Error("useAppContext must be within an AppProvider");
   }
+
   return context;
 };
 export default function AppProvider({

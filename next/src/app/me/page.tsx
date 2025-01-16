@@ -5,6 +5,7 @@ import React from "react";
 
 
 const pageMe = async () => {
+  console.clear()
   const apiUrl = envConfig?.NEXT_PUBLIC_API_ENDPOINT;
   const cookieStore = await cookies();
   const sessionToken = cookieStore.get("sessionToken");
@@ -19,14 +20,18 @@ const pageMe = async () => {
   const res = await result.json();
   return (
     <div>
-      {res.data.map((item: any) => {
-        return (
-          <ul className="justify-center flex p-6">
-            <li>Hello {item.email}</li>
-    
-          </ul>
-        );
-      })}
+      <div>
+        {res.data.map((item: any) => {
+          return (
+            <ul className="justify-center flex p-6">
+              <li key={item.id}>Hello {item.email}</li>
+            </ul>
+          );
+        })}
+      </div>
+      <div>
+        {/* <HelloProfile /> */}
+      </div>
     </div>
   );
 };

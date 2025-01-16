@@ -6,6 +6,8 @@ import Header from "@/components/ui/header";
 import { Toaster } from "@/components/ui/toaster";
 import { cookies } from "next/headers";
 import AppProvider from "@/app/AppProvider";
+import HeaderLayout from "@/app/header";
+import HeaderSession from "@/components/ui/header-session";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "300"] });
 
@@ -30,7 +32,8 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-            <Header />
+          {/* <Header /> */}
+          <>{ sessionToken ? <HeaderSession /> : <Header />}</>
           <AppProvider initialSessionToken={sessionToken?.value || ""}>
             <Toaster />
             {children}
