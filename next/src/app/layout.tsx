@@ -34,7 +34,7 @@ export default async function RootLayout({
         >
           {/* <Header /> */}
           <>{ sessionToken ? <HeaderSession /> : <Header />}</>
-          <AppProvider initialSessionToken={sessionToken?.value || ""}>
+          <AppProvider initialSessionToken={sessionToken?.value || ""}> 
             <Toaster />
             {children}
           </AppProvider>

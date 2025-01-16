@@ -18,20 +18,19 @@ const pageMe = async () => {
     },
   });
   const res = await result.json();
+
   return (
     <div>
-      <div>
+      
         {res.data.map((item: any) => {
           return (
-            <ul className="justify-center flex p-6">
-              <li key={item.id}>Hello {item.email}</li>
+            <ul key={item.userId} className="justify-center flex p-6">
+              <li>Hello {item.email}</li>
             </ul>
           );
         })}
-      </div>
-      <div>
-        {/* <HelloProfile /> */}
-      </div>
+ 
+     
     </div>
   );
 };

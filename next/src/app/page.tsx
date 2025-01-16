@@ -2,8 +2,10 @@ import React from 'react'
 
 const HelloWorld = () => {
   return (
-    <div>HelloWorld</div>
-  )
+    <div>
+      This is home page
+    </div>
+  );
 }
 
 export default HelloWorld

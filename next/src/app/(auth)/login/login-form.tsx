@@ -70,7 +70,7 @@ export function LoginForm() {
         title: "Success!",
         description: result.message,
       });
-      router.push("/me");
+      router.push("/dashboard");
       router.refresh();
 
       // Handle success (e.g., redirect or store token) 
@@ -94,7 +94,8 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form
+      
+      <form 
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 max-w-[600px] w-full"
       >
